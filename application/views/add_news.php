@@ -7,9 +7,9 @@
 </head>
 <body>
 <div class="side_navigation">
-    <a href="/">Страница новостей</a>
+    <a href="/news">Страница новостей</a>
 </div>
-<form action="\add_news" method="post">
+<form action="add_news" method="post">
     <div class="news">
         <label class="signature" for="title">Название новости</label>
         <input class="line_text" type="text" id="title" name="title"/>
