@@ -1,26 +1,43 @@
 <?php
 namespace Application\Controller;
-
 use Application\Models\Database;
 
 class News extends \Application\Core\Controller
 {
-    public function showNews()
+    public function showNews(string $language):void
     {
+        UserData::addIpUserDatabase();
+
         $data = (new Database)
-            ->select('url_image', 'title', 'text')
-            ->from('news')
+            ->select('n.url_img', 'c.name', 'c.content', 'n.date')
+            ->from('news as n')
+            ->join('RIGHT', 'content_news as c', 'n.id = c.id_news')
+            ->where("c.language_code = '$language'")
             ->perform();
 
         echo $this->render('list_news', ['news' => $data]);
     }
 
 
-    public function addNews()
+    public function addNews():void
     {
-        if(isset($_POST['url_image']) or isset($_POST['title']) or isset($_POST['text'])) {
+        if(isset($_POST['id']) and $_POST['id'] != '') {
+            echo '*----';
+                (new Database)
+                    ->insert('content_news', ['id_news' => $_POST['id'], 'name' => $_POST['name'], 'content' => $_POST['content'], 'language_code' => $_POST['language']])
+                    ->perform();
+        }
+        else if(isset($_POST['url_img']) or isset($_POST['content']) or isset($_POST['text']) or isset($_POST['language'])) {
             (new Database)
-                ->insert('news', ['url_image' => $_POST['url_image'], 'title' => $_POST['title'], 'text' => $_POST['text']])
+                ->insert('news',['url_img' => $_POST['url_img']] )
+                ->perform();
+            $id = (new Database)
+                ->select('MAX(id)')
+                ->from('news')
+                ->perform();
+
+            (new Database)
+                ->insert('content_news', ['id_news' => $id[0]['MAX(id)'], 'name' => $_POST['name'], 'content' => $_POST['content'], 'language_code' => $_POST['language']])
                 ->perform();
         }
 
@@ -28,7 +45,7 @@ class News extends \Application\Core\Controller
     }
 
 
-    public function editNews()
+    public function editNews():void
     {
         if(isset($_POST['isDelete'])) {
             (new Database)
@@ -36,17 +53,18 @@ class News extends \Application\Core\Controller
                 ->where('id = ' . $_POST['id'])
                 ->perform();
 
-        } elseif(isset($_POST['url_image']) or isset($_POST['title']) or isset($_POST['text'])) {
+        } elseif(isset($_POST['url_img']) or isset($_POST['name']) or isset($_POST['content']) or isset($_POST['language'])) {
             (new Database)
-                ->update('news')
-                ->set(['url_image' => $_POST['url_image'], 'title' => $_POST['title'], 'text' => $_POST['text']])
-                ->where('id = ' . $_POST['id'])
+                ->update('news as n, content_news as c')
+                ->set(['n.url_img' => $_POST['url_img'], 'c.name' => $_POST['name'], 'c.content' => $_POST['content'], 'c.language_code' => $_POST['language']])
+                ->where('n.id = ' . $_POST['id']. ' AND n.id = c.id_news;')
                 ->perform();
         }
 
         $data = (new Database)
-            ->select('id', 'url_image', 'title', 'text')
-            ->from('news')
+            ->select('n.id', 'n.url_img' ,'c.name', 'c.content', 'c.language_code')
+            ->from('content_news as c')
+            ->join('RIGHT', 'news as n', 'n.id = c.id_news')
             ->perform();
 
         echo $this->render('edit_news', ['news' => $data]);

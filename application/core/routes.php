@@ -1,6 +1,7 @@
 <?php
 namespace Application\Core;
 use Application\Controller\error;
+use Application\Controller\UserData;
 //use application\controller\news;
 
 class Routes
@@ -20,12 +21,14 @@ class Routes
 
                     $function = $array['method'];
 
-                    $class->$function();
+                    //установка языка на котором будут показываться новости
+                    $class->$function(UserData::userLanguage());
 
                     return 0;
                 }
             }
         }
+        print_r($url);
         (new error)->error404();
     }
 }

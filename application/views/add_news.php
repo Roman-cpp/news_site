@@ -11,12 +11,16 @@
 </div>
 <form action="add_news" method="post">
     <div class="news">
-        <label class="signature" for="title">Название новости</label>
-        <input class="line_text" type="text" id="title" name="title"/>
-        <label class="signature" for="url_image">url картинки</label>
-        <input class="line_text" type="text" id="url_image" name="url_image"/>
-        <label class="signature" for="text">Описание новости</label>
-        <textarea class="context_new" id="text" name="text"></textarea>
+        <label class="signature" for="name">Название новости</label>
+        <input class="line_text" type="text" id="name" name="name"/>
+        <label class="signature" for="url_img">url картинки</label>
+        <input class="line_text" type="text" id="url_img" name="url_img"/>
+        <label class="signature" for="content">Описание новости</label>
+        <textarea class="context_new" id="content" name="content"></textarea>
+        <label class="signature" for="language">Язык</label>
+        <input class="line_text" type="text" id="language" name="language"/>
+        <label class="signature" for="id">id не обезательно</label>
+        <input class="line_text" type="text" id="id" name="id"/>
         <input class="button" type="submit">
     </div>
 </form>

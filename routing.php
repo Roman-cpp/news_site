@@ -1,5 +1,6 @@
 <?php
 use Application\Controller\News;
+use Application\Controller\UserData;
 const ROUTES=
 [
     'news' =>[
@@ -17,5 +18,10 @@ const ROUTES=
                 'child' => []
             ]
         ]
-    ]
+    ],
+   'visit_statistics' => [
+       'controller' => UserData::class,
+       'method' => 'showChart',
+       'child' => []
+   ]
 ];

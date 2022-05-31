@@ -21,7 +21,7 @@ class Database
     protected  string $sqlQuery;
 
     /**
-     * Указывает возращает ли запрос данные или нет
+     * Указывает, возвращает ли запрос данные или нет
      * true -возвращает данные
      * false -не возвращает данные
      * @var bool $isGetResul
@@ -36,7 +36,7 @@ class Database
     }
 
     /**
-     * Выборка стобцов таблицы для формирования запроса
+     * Выборка столбцов таблицы для формирования запроса
      * @param array ...$columns названия столбцов таблицы
      * @return $this
      */
@@ -88,7 +88,7 @@ class Database
         return $this;
     }
 
-    /** название таблиц которые будут присутствовать запросе SELECT
+    /** название таблиц которые будут присутствовать запросе
      * @param array ...$nameTable название таблицы
      * @return $this
      */
@@ -101,13 +101,25 @@ class Database
         return $this;
     }
 
+    /** объединяет таблицы по ключам
+     * @param $type string тип соединения
+     * @param $nameTable string название таблицы
+     * @param $linkCondition string внешний и первичный ключ  id_PK = id_FK
+     * @return $this
+     */
+    public function join(string $type, string $nameTable, string $linkCondition) : Database
+    {
+        $this->sqlQuery .= "$type JOIN $nameTable ON $linkCondition ";
+        return $this;
+    }
+
     /** условие для запроса
      * @param string $condition условие
      * @return $this
      */
     public function where(string $condition): Database
     {
-        $this->sqlQuery .= "WHERE $condition ";
+        $this->sqlQuery .= " WHERE $condition ";
         return $this;
     }
 
@@ -127,12 +139,35 @@ class Database
         return $this;
     }
 
+    /** задает группировка по атрибутам
+     * @param array ...$column названия столбцов таблицы
+     * @return $this
+     */
+    public function groupBy(...$column): Database
+    {
+        $stringOfColumn = implode(', ', $column);
+        $this->sqlQuery .= " GROUP BY $stringOfColumn ";
+        return $this;
+    }
+
+    /** задает сортировку выходных значений.
+     * @param array ...$column названия столбцов таблицы
+     * @return $this
+     */
+    public function orderBy(...$column): Database
+    {
+        $stringOfColumn = implode(', ', $column);
+        $this->sqlQuery .= " ORDER BY $stringOfColumn ";
+        return $this;
+    }
+
     /**
      * Выполняет запрос
      * @return array данные полученные после выполнения запроса
      */
     public function perform(): array
     {
+        //echo $this->sqlQuery;
         $resultData = [];
         $resultQuery = $this->conn->query($this->sqlQuery);
 

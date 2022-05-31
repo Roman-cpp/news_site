@@ -9,18 +9,28 @@
 <div class="side_navigation">
     <a href="news/add_news">Добавить новость</a>
     <a href="news/edit_news">Редактировать новости</a>
+    <a href="\visit_statistics">Посещаемость сайта</a>
 </div>
+
+
+<select onchange="window.location='http://localhost/news?language=' + value">
+    <option >Выбрать язык</option>
+    <option value="en">en</option>
+    <option value="ru">ru</option>
+</select>
+
+
 <?php
 foreach ($news as $element): ?>
     <div class="news">
     <div>
-        <img class="img_news" alt="" src="<?=$element['url_image'];?>">
+        <img class="img_news" alt="" src="<?=$element['url_img'];?>">
     </div>
     <div class="title">
-        <?=$element['title'];?>
+        <?=$element['name'];?>
     </div>
     <div class="paragraph">
-        <?=$element['text'];?>
+        <?=$element['content'] . ' ' . $element['date'];?>
     </div>
 </div>
 
